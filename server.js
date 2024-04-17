@@ -27,16 +27,33 @@ server.post('/videos', (request, reply) => {
     return reply.status(201).send()
 })
 
-server.get('/videos', () => {
-    return "hello"
+server.get('/videos', (request) => {
+    const search = request.query.search
+
+    const videos = database.list(search)
+
+    return videos
 })
 
 server.put('/videos/:id', () => {
-    return "hello"
+    const videoId = request.params.id
+    const { title, description, duration } = request.body
+
+    const video = database.update(videoId, {
+        title: title,
+        description: description,
+        duration: duration,
+    })
+
+    return reply.status(204).send()
 })
 
 server.delete('/videos/:id', () => {
-    return "hello"
+    const videoId = request.params.id
+
+    database.delete(videoId)
+
+    return reply.status(204).send()
 })
 
 server.listen({
